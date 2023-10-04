@@ -1,4 +1,3 @@
-
 // You can write more code here
 
 /* START OF COMPILED CODE */
@@ -10,45 +9,42 @@ import PushActionScript from "../script-nodes/PushActionScript";
 /* END-USER-IMPORTS */
 
 export default class Level extends Phaser.Scene {
+  constructor() {
+    super("Level");
 
-	constructor() {
-		super("Level");
+    /* START-USER-CTR-CODE */
+    // Write your code here.
+    /* END-USER-CTR-CODE */
+  }
 
-		/* START-USER-CTR-CODE */
-		// Write your code here.
-		/* END-USER-CTR-CODE */
-	}
+  editorCreate(): void {
+    // fufuSuperDino
+    const fufuSuperDino = this.add.image(320, 568, "FufuSuperDino");
 
-	editorCreate(): void {
+    // onPointerDownScript
+    const onPointerDownScript = new OnPointerDownScript(fufuSuperDino);
 
-		// fufuSuperDino
-		const fufuSuperDino = this.add.image(640, 257, "FufuSuperDino");
+    // pushAction
+    new PushActionScript(onPointerDownScript);
 
-		// onPointerDownScript
-		const onPointerDownScript = new OnPointerDownScript(fufuSuperDino);
+    // text
+    const text = this.add.text(316, 647, "", {});
+    text.setOrigin(0.5, 0.5);
+    text.text = "HI\n";
+    text.setStyle({ align: "center", fontFamily: "Arial", fontSize: "3em" });
 
-		// pushAction
-		new PushActionScript(onPointerDownScript);
+    this.events.emit("scene-awake");
+  }
 
-		// text
-		const text = this.add.text(640, 458, "", {});
-		text.setOrigin(0.5, 0.5);
-		text.text = "Phaser 3 + Phaser Editor 2D\nWebpack + TypeScript";
-		text.setStyle({ "align": "center", "fontFamily": "Arial", "fontSize": "3em" });
+  /* START-USER-CODE */
 
-		this.events.emit("scene-awake");
-	}
+  // Write your code here
 
-	/* START-USER-CODE */
+  create() {
+    this.editorCreate();
+  }
 
-	// Write your code here
-
-	create() {
-
-		this.editorCreate();
-	}
-
-	/* END-USER-CODE */
+  /* END-USER-CODE */
 }
 
 /* END OF COMPILED CODE */

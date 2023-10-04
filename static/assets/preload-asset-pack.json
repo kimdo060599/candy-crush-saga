@@ -2,6 +2,11 @@
     "section1": {
         "files": [
             {
+                "url": "assets/images/diamond.png",
+                "type": "image",
+                "key": "diamond"
+            },
+            {
                 "url": "assets/guapen.png",
                 "type": "image",
                 "key": "guapen"

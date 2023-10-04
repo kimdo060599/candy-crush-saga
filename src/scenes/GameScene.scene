@@ -1,0 +1,60 @@
+{
+    "id": "59539e5e-06da-4a24-aad5-cd3d9974d55e",
+    "sceneType": "SCENE",
+    "settings": {
+        "exportClass": true,
+        "autoImport": true,
+        "preloadPackFiles": [],
+        "createMethodName": "editorCreate",
+        "sceneKey": "GameScene",
+        "compilerOutputLanguage": "TYPE_SCRIPT",
+        "borderWidth": 640,
+        "borderHeight": 1136
+    },
+    "displayList": [
+        {
+            "type": "Image",
+            "id": "76e77db9-f2ba-4b78-af5f-1cb8138b6dd8",
+            "label": "background_2x",
+            "texture": {
+                "key": "Background@2x"
+            },
+            "x": 320,
+            "y": 568
+        },
+        {
+            "type": "Text",
+            "id": "9463f4e3-71b4-4477-898e-0c09c4933d5d",
+            "label": "timerText",
+            "x": 32,
+            "y": 20,
+            "text": "Time",
+            "fontSize": "20px"
+        },
+        {
+            "type": "Text",
+            "id": "e7838759-7832-4fd9-9411-804d3d2041d0",
+            "label": "levelText",
+            "x": 244,
+            "y": 20,
+            "text": "Level",
+            "fontSize": "20px"
+        },
+        {
+            "type": "Text",
+            "id": "4e10df87-7aa7-4584-8f74-c450b9729c38",
+            "label": "scoreText",
+            "x": 429,
+            "y": 20,
+            "text": "Score",
+            "fontSize": "20px"
+        }
+    ],
+    "plainObjects": [],
+    "meta": {
+        "app": "Phaser Editor 2D - Scene Editor",
+        "url": "https://phasereditor2d.com",
+        "contentType": "phasereditor2d.core.scene.SceneContentType",
+        "version": 4
+    }
+}

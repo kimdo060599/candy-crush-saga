@@ -2,9 +2,171 @@
     "section1": {
         "files": [
             {
+                "url": "assets/images/Background@2x.png",
+                "type": "image",
+                "key": "Background@2x"
+            },
+            {
+                "url": [
+                    "assets/sounds/Chomp.wav"
+                ],
+                "type": "audio",
+                "key": "Chomp"
+            },
+            {
+                "url": "assets/images/Croissant.png",
+                "type": "image",
+                "key": "Croissant"
+            },
+            {
+                "url": "assets/images/Croissant-Highlighted@2x.png",
+                "type": "image",
+                "key": "Croissant-Highlighted@2x"
+            },
+            {
+                "url": "assets/images/Croissant@2x.png",
+                "type": "image",
+                "key": "Croissant@2x"
+            },
+            {
+                "url": "assets/images/Cupcake.png",
+                "type": "image",
+                "key": "Cupcake"
+            },
+            {
+                "url": "assets/images/Cupcake-Highlighted@2x.png",
+                "type": "image",
+                "key": "Cupcake-Highlighted@2x"
+            },
+            {
+                "url": "assets/images/Cupcake@2x.png",
+                "type": "image",
+                "key": "Cupcake@2x"
+            },
+            {
+                "url": "assets/images/Danish.png",
+                "type": "image",
+                "key": "Danish"
+            },
+            {
+                "url": "assets/images/Danish-Highlighted@2x.png",
+                "type": "image",
+                "key": "Danish-Highlighted@2x"
+            },
+            {
+                "url": "assets/images/Danish@2x.png",
+                "type": "image",
+                "key": "Danish@2x"
+            },
+            {
+                "url": "assets/images/diamonds32x24x5.png",
+                "type": "image",
+                "key": "diamonds32x24x5"
+            },
+            {
+                "url": "assets/images/diamonds32x5.png",
+                "type": "image",
+                "key": "diamonds32x5"
+            },
+            {
+                "url": "assets/images/Donut.png",
+                "type": "image",
+                "key": "Donut"
+            },
+            {
+                "url": "assets/images/Donut-Highlighted@2x.png",
+                "type": "image",
+                "key": "Donut-Highlighted@2x"
+            },
+            {
+                "url": "assets/images/Donut@2x.png",
+                "type": "image",
+                "key": "Donut@2x"
+            },
+            {
+                "url": [
+                    "assets/sounds/Drip.wav"
+                ],
+                "type": "audio",
+                "key": "Drip"
+            },
+            {
+                "url": [
+                    "assets/sounds/Error.wav"
+                ],
+                "type": "audio",
+                "key": "Error"
+            },
+            {
                 "url": "assets/FufuSuperDino.png",
                 "type": "image",
                 "key": "FufuSuperDino"
+            },
+            {
+                "url": [
+                    "assets/sounds/Ka-Ching.wav"
+                ],
+                "type": "audio",
+                "key": "Ka-Ching"
+            },
+            {
+                "url": "assets/images/LevelComplete@2x.png",
+                "type": "image",
+                "key": "LevelComplete@2x"
+            },
+            {
+                "url": "assets/images/Macaroon.png",
+                "type": "image",
+                "key": "Macaroon"
+            },
+            {
+                "url": "assets/images/Macaroon-Highlighted@2x.png",
+                "type": "image",
+                "key": "Macaroon-Highlighted@2x"
+            },
+            {
+                "url": "assets/images/Macaroon@2x.png",
+                "type": "image",
+                "key": "Macaroon@2x"
+            },
+            {
+                "url": [
+                    "assets/sounds/mining-by-moonlight.mp3"
+                ],
+                "type": "audio",
+                "key": "mining-by-moonlight"
+            },
+            {
+                "url": [
+                    "assets/sounds/Scrape.wav"
+                ],
+                "type": "audio",
+                "key": "Scrape"
+            },
+            {
+                "url": "assets/images/SugarCookie.png",
+                "type": "image",
+                "key": "SugarCookie"
+            },
+            {
+                "url": "assets/images/SugarCookie-Highlighted@2x.png",
+                "type": "image",
+                "key": "SugarCookie-Highlighted@2x"
+            },
+            {
+                "url": "assets/images/SugarCookie@2x.png",
+                "type": "image",
+                "key": "SugarCookie@2x"
+            },
+            {
+                "url": "assets/images/Tile@2x.png",
+                "type": "image",
+                "key": "Tile@2x"
+            },
+            {
+                "url": "assets/images/TileEmpty.png",
+                "type": "image",
+                "key": "TileEmpty"
             }
         ]
     },
@@ -12,6 +174,7 @@
         "app": "Phaser Editor 2D - Asset Pack Editor",
         "contentType": "phasereditor2d.pack.core.AssetContentType",
         "url": "https://phasereditor2d.com",
-        "version": 2
+        "version": 2,
+        "showAllFilesInBlocks": false
     }
 }
