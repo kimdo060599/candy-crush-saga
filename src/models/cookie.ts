@@ -37,12 +37,12 @@ export class Cookie {
   }
 
   spriteNames: Array<string> = [
-    "Croissant",
-    "Cupcake",
-    "Danish",
-    "Donut",
-    "Macaroon",
-    "SugarCookie",
+    "Croissant@2x",
+    "Cupcake@2x",
+    "Danish@2x",
+    "Donut@2x",
+    "Macaroon@2x",
+    "SugarCookie@2x",
   ];
 
   highlightedSpriteNames: Array<string> = [

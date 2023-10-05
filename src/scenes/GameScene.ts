@@ -112,7 +112,6 @@ export default class GameScene extends Phaser.Scene {
   }
   private initLevel(levelName: string) {
     var levelData = this.cache.json.get(levelName);
-    // : IJsonLevel = this.game.cache.getJSON(levelName);
 
     if (levelData == null) {
       throw "Cannot load level data";
@@ -122,7 +121,7 @@ export default class GameScene extends Phaser.Scene {
     // this.level = new Level(gameConfig);
     // this.level.initWithData(levelData);
     this.initWithData(levelData);
-    // this.addTiles();
+    this.addTiles();
   }
   initWithData(level: any) {
     this.createTilesArray();
@@ -138,8 +137,6 @@ export default class GameScene extends Phaser.Scene {
         }
       }
     }
-
-    console.log(this.tiles);
   }
   private createTilesArray() {
     this.tiles = new Array(this.config.numColumns - 1);
@@ -163,9 +160,20 @@ export default class GameScene extends Phaser.Scene {
       //  createdCookie.events.onInputUp.add(this.touchesEnd, this);
       cookie.sprite = createdCookie;
     });
-    console.log(cookies);
   }
+  addTiles() {
+    this.tilesLayer = this.add.group();
+    this.tilesLayer.z = 1;
 
+    for (var row: number = 0; row < this.config.numColumns; row++) {
+      for (var column: number = 0; column < this.config.numColumns; column++) {
+        // if (this.level.tileAtColumn(column, row) != null) {
+        var point = this.pointForCookie(column, row);
+        this.tilesLayer.create(point.x, point.y, "Tile@2x");
+        // }
+      }
+    }
+  }
   pointForCookie(column: number, row: number): Phaser.Geom.Point {
     var x = column * this.tileWidth + this.tileWidth / 2;
     var y = row * this.tileHeight + this.tileHeight / 2 + this.marginYDelta;
