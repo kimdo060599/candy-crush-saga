@@ -110,6 +110,36 @@
                 "key": "Ka-Ching"
             },
             {
+                "url": "assets/levels/Level_0.json",
+                "type": "json",
+                "key": "Level_0"
+            },
+            {
+                "url": "assets/levels/Level_1.json",
+                "type": "json",
+                "key": "Level_1"
+            },
+            {
+                "url": "assets/levels/Level_2.json",
+                "type": "json",
+                "key": "Level_2"
+            },
+            {
+                "url": "assets/levels/Level_3.json",
+                "type": "json",
+                "key": "Level_3"
+            },
+            {
+                "url": "assets/levels/Level_4.json",
+                "type": "json",
+                "key": "Level_4"
+            },
+            {
+                "url": "assets/levels/Level_5.json",
+                "type": "json",
+                "key": "Level_5"
+            },
+            {
                 "url": "assets/images/LevelComplete@2x.png",
                 "type": "image",
                 "key": "LevelComplete@2x"
