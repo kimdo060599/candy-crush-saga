@@ -4,6 +4,7 @@ import { GameHelpers } from "../utils/game-helpers";
 import { Config } from "../models/config";
 import { Tile } from "../models/tile";
 import { Level } from "../models/level";
+import { Swap } from "../models/swap";
 export default class GameScene extends Phaser.Scene {
   tileWidth: number = 64.0;
   tileHeight: number = 72.0;
@@ -67,6 +68,8 @@ export default class GameScene extends Phaser.Scene {
 
     this.initLevel("Level_" + this.levelNumber);
     this.beginGame();
+    this.input.on("pointermove", this.touchesMoved);
+    console.log(this.swipeFromColumn, this.swipeFromRow);
   }
 
   //   private initScore() {
@@ -179,6 +182,77 @@ export default class GameScene extends Phaser.Scene {
     }
   }
 
+  touchesMoved(pointer: Phaser.Input.Pointer, x: number, y: number) {
+    // debugger;
+    // this.debugMove(x, y);
+    if (this.swipeFromColumn == undefined) return;
+
+    if (pointer.isDown) {
+      var cookiePosition: ICookiePosition = {
+        column: null!,
+        row: null!,
+      };
+      //TODO: need to configure this sizes
+
+      if (this.convertPoint(new Phaser.Geom.Point(x, y), cookiePosition)) {
+        var horzDelta: number = 0,
+          vertDelta: number = 0;
+
+        if (cookiePosition.column < this.swipeFromColumn) {
+          // swipe left
+          horzDelta = -1;
+        } else if (cookiePosition.column > this.swipeFromColumn) {
+          // swipe right
+          horzDelta = 1;
+        } else if (cookiePosition.row < this.swipeFromRow!) {
+          // swipe down
+          vertDelta = -1;
+        } else if (cookiePosition.row > this.swipeFromRow!) {
+          // swipe up
+          vertDelta = 1;
+        }
+        console.log(horzDelta, vertDelta);
+        if (horzDelta != 0 || vertDelta != 0) {
+          this.trySwapHorizontal(horzDelta, vertDelta);
+          this.swipeFromColumn = undefined;
+        }
+      }
+    }
+  }
+  trySwapHorizontal(horzDelta: number, vertDelta: number) {
+    this.userInteractionEnabled = false;
+
+    var toColumn = this.swipeFromColumn! + horzDelta;
+    var toRow = this.swipeFromRow! + vertDelta;
+
+    if (toColumn < 0 || toColumn >= this.level.config.numColumns) return;
+    if (toRow < 0 || toRow >= this.level.config.numRows) return;
+
+    var toCookie: Cookie = this.level.cookieAtPosition(toColumn, toRow);
+    if (!toCookie) return;
+
+    var fromCookie = this.level.cookieAtPosition(
+      this.swipeFromColumn!,
+      this.swipeFromRow!
+    );
+
+    var swap = new Swap();
+    swap.cookieA = fromCookie;
+    swap.cookieB = toCookie;
+
+    if (this.level.isPossibleSwap(swap)) {
+      this.userInteractionEnabled = true;
+      //  this.level.performSwap(swap);
+      //  this.animateSwap(swap);
+      this.isPossibleSwap = true;
+      console.log("Good swap");
+    } else {
+      this.userInteractionEnabled = true;
+      //  this.animateInvalidSwap(swap);
+      this.isPossibleSwap = false;
+      console.log("Bad swap");
+    }
+  }
   convertPoint(
     point: Phaser.Geom.Point,
     cookiePosition: ICookiePosition
@@ -200,7 +274,7 @@ export default class GameScene extends Phaser.Scene {
     }
   }
   touchesEnd() {
-    console.log("this.touchesEnd");
+    this.swipeFromColumn = this.swipeFromRow = undefined;
   }
 
   addTiles() {

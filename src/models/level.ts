@@ -10,7 +10,7 @@ export interface ILevel {
   moves: number;
 }
 export class Level {
-  cookies!: (Cookie | undefined)[][];
+  cookies!: Cookie [][];
   tiles!: (Tile | undefined)[][];
   possibleSwaps!: Swap[];
 
@@ -44,6 +44,24 @@ export class Level {
     }
   }
 
+  private isTwoCookiesEquals(cookieA: Cookie, cookieB: Cookie) {
+    return cookieA.column == cookieB.column && cookieA.row == cookieB.row && cookieA.cookieType == cookieB.cookieType;
+  }
+
+  isPossibleSwap(other: Swap): boolean {
+
+    for (var i = 0; i < this.possibleSwaps.length; i++) {
+      var possibleSwap = this.possibleSwaps[i];
+
+      var isPossible = (this.isTwoCookiesEquals(other.cookieA, possibleSwap.cookieA) && this.isTwoCookiesEquals(other.cookieB, possibleSwap.cookieB)) ||
+        (this.isTwoCookiesEquals(other.cookieB, possibleSwap.cookieA) && this.isTwoCookiesEquals(other.cookieA, possibleSwap.cookieB));
+
+      if (isPossible) return true;
+    }
+
+    return false;
+  }
+
   private createTilesArray() {
     this.tiles = new Array(this.config.numColumns - 1);
     for (var i = 0; i < this.config.numColumns; i++) {
@@ -64,7 +82,7 @@ export class Level {
           );
           array.push(cookie);
         } else {
-          this.cookies[column][row] = undefined;
+          this.cookies[column][row] = null!;
         }
       }
     }
