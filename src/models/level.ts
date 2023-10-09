@@ -65,7 +65,6 @@ export class Level {
   }
 
   isPossibleSwap(other: Swap): boolean {
-    debugger;
     for (var i = 0; i < this.possibleSwaps.length; i++) {
       var possibleSwap = this.possibleSwaps[i];
 

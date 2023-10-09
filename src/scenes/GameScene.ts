@@ -243,7 +243,7 @@ export default class GameScene extends Phaser.Scene {
     if (this.level.isPossibleSwap(swap)) {
       this.userInteractionEnabled = true;
       this.level.performSwap(swap);
-      //  this.animateSwap(swap);
+      this.animateSwap(swap);
       this.isPossibleSwap = true;
       console.log("Good swap");
     } else {
@@ -299,5 +299,30 @@ export default class GameScene extends Phaser.Scene {
     var y = row * this.tileHeight + this.tileHeight / 2 + this.marginYDelta;
 
     return new Phaser.Geom.Point(x, y);
+  }
+
+  animateSwap(swap: Swap) {
+    var cookieSrpiteA: Phaser.GameObjects.Sprite = swap.cookieA.sprite,
+      cookieSrpiteB: Phaser.GameObjects.Sprite = swap.cookieB.sprite;
+    var tween = this.add.tween({
+      targets: swap.cookieA.sprite,
+      duration: 100,
+      ease: Phaser.Math.Easing.Linear,
+      x: cookieSrpiteB.x,
+      y: cookieSrpiteB.y,
+      onComplete: () => {
+        console.log("tween complete");
+        this.swapSound.play();
+
+        this.userInteractionEnabled = true;
+      },
+    });
+    var tween2 = this.add.tween({
+      targets: swap.cookieB.sprite,
+      duration: 100,
+      ease: Phaser.Math.Easing.Linear,
+      x: cookieSrpiteA.x,
+      y: cookieSrpiteA.y,
+    });
   }
 }
