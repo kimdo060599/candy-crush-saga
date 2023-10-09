@@ -78,7 +78,6 @@ export class Level {
 
       if (isPossible) return true;
     }
-
     return false;
   }
 
@@ -106,7 +105,7 @@ export class Level {
 
     // this.calculateScores(horizontalChains);
     // this.calculateScores(verticalChains);
-
+    this.detectPossibleSwaps();
     return horizontalChains.concat(verticalChains);
   }
 
