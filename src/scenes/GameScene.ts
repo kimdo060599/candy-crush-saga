@@ -219,6 +219,7 @@ export default class GameScene extends Phaser.Scene {
       }
     }
   }
+
   trySwapHorizontal(horzDelta: number, vertDelta: number) {
     this.userInteractionEnabled = false;
 
@@ -241,18 +242,17 @@ export default class GameScene extends Phaser.Scene {
     swap.cookieB = toCookie;
 
     if (this.level.isPossibleSwap(swap)) {
-      this.userInteractionEnabled = true;
       this.level.performSwap(swap);
       this.animateSwap(swap);
       this.isPossibleSwap = true;
       console.log("Good swap");
     } else {
-      this.userInteractionEnabled = true;
       this.animateInvalidSwap(swap);
       this.isPossibleSwap = false;
       console.log("Bad swap");
     }
   }
+
   convertPoint(
     point: Phaser.Geom.Point,
     cookiePosition: ICookiePosition
@@ -273,6 +273,7 @@ export default class GameScene extends Phaser.Scene {
       return false;
     }
   }
+
   touchesEnd() {
     console.log("pointerup");
 

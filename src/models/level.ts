@@ -43,6 +43,7 @@ export class Level {
       }
     }
   }
+
   suffle() {
     var set: Cookie[];
 
@@ -79,6 +80,7 @@ export class Level {
 
     return false;
   }
+
   performSwap(swap: Swap) {
     var columnA: number = swap.cookieA.column,
       rowA: number = swap.cookieA.row,
@@ -93,6 +95,7 @@ export class Level {
     swap.cookieA.column = columnB;
     swap.cookieA.row = rowB;
   }
+
   private createTilesArray() {
     this.tiles = new Array(this.config.numColumns - 1);
     for (var i = 0; i < this.config.numColumns; i++) {
@@ -123,11 +126,30 @@ export class Level {
   private calculateCookieType(column: number, row: number): CookieType {
     var cookieType: CookieType;
 
-    // do {
-    cookieType = GameHelpers.getRandomNumber(this.config.numCookieTypes);
-    // } while (this.whereIsAlreadyTwoCookies(column, row, cookieType));
+    do {
+      cookieType = GameHelpers.getRandomNumber(this.config.numCookieTypes);
+    } while (this.whereIsAlreadyTwoCookies(column, row, cookieType));
 
     return cookieType;
+  }
+
+  private whereIsAlreadyTwoCookies(
+    column: number,
+    row: number,
+    cookieType: CookieType
+  ): boolean {
+    return (
+      (column >= 2 &&
+        this.cookies[column - 1][row] &&
+        this.cookies[column - 2][row] &&
+        this.cookies[column - 1][row].cookieType == cookieType &&
+        this.cookies[column - 2][row].cookieType == cookieType) ||
+      (row >= 2 &&
+        this.cookies[column][row - 1] &&
+        this.cookies[column][row - 2] &&
+        this.cookies[column][row - 1].cookieType == cookieType &&
+        this.cookies[column][row - 2].cookieType == cookieType)
+    );
   }
 
   private createCookieAtColumn(
@@ -143,10 +165,14 @@ export class Level {
   cookieAtPosition(column: number, row: number) {
     return this.cookies[column][row];
   }
+
   private hasChainAtColumn(column: number, row: number): boolean {
     var cookie = this.cookies[column][row],
       cookieType: CookieType;
 
+    if (!cookie) {
+      return false;
+    }
     // if (cookie) {
     cookieType = cookie.cookieType;
     // } else {
@@ -187,6 +213,7 @@ export class Level {
     );
     return vertLength >= 3;
   }
+
   private detectPossibleSwaps() {
     var possibleSwaps: Swap[] = [];
 
