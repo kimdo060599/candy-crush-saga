@@ -65,11 +65,13 @@ export default class GameScene extends Phaser.Scene {
     this.createScoreText();
 
     this.createLevelText(this.levelNumber + 1);
+    this.input.on("pointermove", (pointer: Phaser.Input.Pointer) => {
+      this.touchesMoved(pointer, pointer.x, pointer.y);
+    });
 
     this.initLevel("Level_" + this.levelNumber);
     this.beginGame();
-    this.input.on("pointermove", this.touchesMoved);
-    console.log(this.swipeFromColumn, this.swipeFromRow);
+    // console.log(this.swipeFromColumn, this.swipeFromRow);
   }
 
   //   private initScore() {
@@ -83,7 +85,7 @@ export default class GameScene extends Phaser.Scene {
   //  }
 
   beginGame() {
-    var cookies: Cookie[] = this.level.createInitialCookies();
+    var cookies: Cookie[] = this.level.suffle();
     this.addSpritesForCookies(cookies);
   }
 
@@ -147,8 +149,6 @@ export default class GameScene extends Phaser.Scene {
       });
       createdCookie.on("pointerup", this.touchesEnd);
       cookie.sprite = createdCookie;
-      // console.log(createdCookie.event);
-      // debugger;
     });
   }
 
@@ -183,7 +183,6 @@ export default class GameScene extends Phaser.Scene {
   }
 
   touchesMoved(pointer: Phaser.Input.Pointer, x: number, y: number) {
-    // debugger;
     // this.debugMove(x, y);
     if (this.swipeFromColumn == undefined) return;
 
@@ -211,6 +210,7 @@ export default class GameScene extends Phaser.Scene {
           // swipe up
           vertDelta = 1;
         }
+
         console.log(horzDelta, vertDelta);
         if (horzDelta != 0 || vertDelta != 0) {
           this.trySwapHorizontal(horzDelta, vertDelta);
@@ -242,7 +242,7 @@ export default class GameScene extends Phaser.Scene {
 
     if (this.level.isPossibleSwap(swap)) {
       this.userInteractionEnabled = true;
-      //  this.level.performSwap(swap);
+      this.level.performSwap(swap);
       //  this.animateSwap(swap);
       this.isPossibleSwap = true;
       console.log("Good swap");
@@ -274,7 +274,10 @@ export default class GameScene extends Phaser.Scene {
     }
   }
   touchesEnd() {
+    console.log("pointerup");
+
     this.swipeFromColumn = this.swipeFromRow = undefined;
+    console.log("swipeFromColumn : ", this.swipeFromColumn);
   }
 
   addTiles() {
