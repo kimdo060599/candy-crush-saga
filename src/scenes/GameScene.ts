@@ -248,7 +248,7 @@ export default class GameScene extends Phaser.Scene {
       console.log("Good swap");
     } else {
       this.userInteractionEnabled = true;
-      //  this.animateInvalidSwap(swap);
+      this.animateInvalidSwap(swap);
       this.isPossibleSwap = false;
       console.log("Bad swap");
     }
@@ -323,6 +323,41 @@ export default class GameScene extends Phaser.Scene {
       ease: Phaser.Math.Easing.Linear,
       x: cookieSrpiteA.x,
       y: cookieSrpiteA.y,
+    });
+  }
+
+  animateInvalidSwap(swap: Swap) {
+    var cookieSrpiteA: Phaser.GameObjects.Sprite = swap.cookieA.sprite,
+      cookieSrpiteB: Phaser.GameObjects.Sprite = swap.cookieB.sprite;
+    var tween = this.add.tween({
+      targets: swap.cookieA.sprite,
+      duration: 100,
+      ease: Phaser.Math.Easing.Linear,
+      x: cookieSrpiteB.x,
+      y: cookieSrpiteB.y,
+    });
+    var tween2 = this.add.tween({
+      targets: swap.cookieB.sprite,
+      duration: 100,
+      ease: Phaser.Math.Easing.Linear,
+      x: cookieSrpiteA.x,
+      y: cookieSrpiteA.y,
+      onComplete: () => {
+        var tweenBack = this.add.tween({
+          targets: swap.cookieB.sprite,
+          duration: 100,
+          x: cookieSrpiteA.x,
+          y: cookieSrpiteA.y,
+        });
+        var tweenBack2 = this.add.tween({
+          targets: swap.cookieA.sprite,
+          duration: 100,
+          x: cookieSrpiteB.x,
+          y: cookieSrpiteB.y,
+        });
+        this.invalidSwapSound.play();
+        this.userInteractionEnabled = true;
+      },
     });
   }
 }
