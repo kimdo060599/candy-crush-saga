@@ -1,4 +1,5 @@
 import { GameHelpers } from "../utils/game-helpers";
+import { Chain, ChainType } from "./chain";
 import { Config } from "./config";
 import { Cookie, CookieType } from "./cookie";
 import { Swap } from "./swap";
@@ -94,6 +95,19 @@ export class Level {
     this.cookies[columnB][rowB] = swap.cookieA;
     swap.cookieA.column = columnB;
     swap.cookieA.row = rowB;
+  }
+
+  removeMatches(): Chain[] {
+    var horizontalChains = this.detectHorizontalMatches();
+    var verticalChains = this.detectVerticalMatches();
+
+    // this.removeCookies(horizontalChains);
+    // this.removeCookies(verticalChains);
+
+    // this.calculateScores(horizontalChains);
+    // this.calculateScores(verticalChains);
+
+    return horizontalChains.concat(verticalChains);
   }
 
   private createTilesArray() {
@@ -273,5 +287,79 @@ export class Level {
     }
 
     this.possibleSwaps = possibleSwaps;
+  }
+
+  private detectHorizontalMatches(): Chain[] {
+    var set: Chain[] = [];
+
+    for (var row = 0; row < this.config.numRows; row++) {
+      for (var column = 0; column < this.config.numColumns - 2; ) {
+        if (this.cookies[column][row] != null) {
+          var matchType = this.cookies[column][row].cookieType;
+
+          if (
+            this.cookies[column + 1][row] &&
+            this.cookies[column + 1][row].cookieType == matchType &&
+            this.cookies[column + 2][row] &&
+            this.cookies[column + 2][row].cookieType == matchType
+          ) {
+            var chain = new Chain();
+            chain.chainType = ChainType.chainTypeHorizontal;
+
+            do {
+              chain.addCookie(this.cookies[column][row]);
+              column += 1;
+            } while (
+              column < this.config.numColumns &&
+              this.cookies[column][row] &&
+              this.cookies[column][row].cookieType == matchType
+            );
+
+            set.push(chain);
+
+            continue;
+          }
+        }
+
+        column += 1;
+      }
+    }
+    return set;
+  }
+
+  private detectVerticalMatches(): Chain[] {
+    var set: Chain[] = [];
+
+    for (var column = 0; column < this.config.numColumns; column++) {
+      for (var row = 0; row < this.config.numRows - 2; ) {
+        if (this.cookies[column][row] != null) {
+          var matchType = this.cookies[column][row].cookieType;
+
+          if (
+            this.cookies[column][row + 1] &&
+            this.cookies[column][row + 1].cookieType == matchType &&
+            this.cookies[column][row + 2] &&
+            this.cookies[column][row + 2].cookieType == matchType
+          ) {
+            var chain = new Chain();
+            chain.chainType = ChainType.chainTypeVertical;
+
+            do {
+              chain.addCookie(this.cookies[column][row]);
+              row += 1;
+            } while (
+              row < this.config.numRows &&
+              this.cookies[column][row] &&
+              this.cookies[column][row].cookieType == matchType
+            );
+
+            set.push(chain);
+            continue;
+          }
+        }
+        row += 1;
+      }
+    }
+    return set;
   }
 }

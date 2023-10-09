@@ -28,7 +28,7 @@ export class Cookie {
   column: number;
   row: number;
   cookieType: number;
-  sprite: any;
+  sprite?: Phaser.GameObjects.Sprite;
 
   constructor(column: number, row: number, cookieType: number) {
     this.column = column;

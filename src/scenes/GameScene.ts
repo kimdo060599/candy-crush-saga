@@ -5,6 +5,7 @@ import { Config } from "../models/config";
 import { Tile } from "../models/tile";
 import { Level } from "../models/level";
 import { Swap } from "../models/swap";
+import { Chain } from "../models/chain";
 export default class GameScene extends Phaser.Scene {
   tileWidth: number = 64.0;
   tileHeight: number = 72.0;
@@ -71,7 +72,6 @@ export default class GameScene extends Phaser.Scene {
 
     this.initLevel("Level_" + this.levelNumber);
     this.beginGame();
-    // console.log(this.swipeFromColumn, this.swipeFromRow);
   }
 
   //   private initScore() {
@@ -147,7 +147,9 @@ export default class GameScene extends Phaser.Scene {
       createdCookie.on("pointerdown", () => {
         this.touchesBegan(createdCookie, point);
       });
-      createdCookie.on("pointerup", this.touchesEnd);
+      createdCookie.on("pointerup", () => {
+        this.touchesEnd();
+      });
       cookie.sprite = createdCookie;
     });
   }
@@ -171,11 +173,6 @@ export default class GameScene extends Phaser.Scene {
         this.swipeFromColumn = cookiePosition.column;
         this.swipeFromRow = cookiePosition.row;
       }
-
-      console.log(
-        "selectedCookie",
-        "column: " + cookiePosition.column + " row: " + cookiePosition.row
-      );
     } else {
       this.swipeFromColumn = undefined;
       this.swipeFromRow = undefined;
@@ -211,7 +208,6 @@ export default class GameScene extends Phaser.Scene {
           vertDelta = 1;
         }
 
-        console.log(horzDelta, vertDelta);
         if (horzDelta != 0 || vertDelta != 0) {
           this.trySwapHorizontal(horzDelta, vertDelta);
           this.swipeFromColumn = undefined;
@@ -245,11 +241,9 @@ export default class GameScene extends Phaser.Scene {
       this.level.performSwap(swap);
       this.animateSwap(swap);
       this.isPossibleSwap = true;
-      console.log("Good swap");
     } else {
       this.animateInvalidSwap(swap);
       this.isPossibleSwap = false;
-      console.log("Bad swap");
     }
   }
 
@@ -275,10 +269,15 @@ export default class GameScene extends Phaser.Scene {
   }
 
   touchesEnd() {
-    console.log("pointerup");
-
     this.swipeFromColumn = this.swipeFromRow = undefined;
-    console.log("swipeFromColumn : ", this.swipeFromColumn);
+    if (this.isPossibleSwap) {
+      this.handleMatches();
+    }
+  }
+
+  handleMatches() {
+    var chains = this.level.removeMatches();
+    this.animateMatchedCookies(chains);
   }
 
   addTiles() {
@@ -303,8 +302,12 @@ export default class GameScene extends Phaser.Scene {
   }
 
   animateSwap(swap: Swap) {
-    var cookieSrpiteA: Phaser.GameObjects.Sprite = swap.cookieA.sprite,
-      cookieSrpiteB: Phaser.GameObjects.Sprite = swap.cookieB.sprite;
+    var cookieSrpiteA: Phaser.GameObjects.Sprite | undefined =
+        swap.cookieA.sprite,
+      cookieSrpiteB: Phaser.GameObjects.Sprite | undefined =
+        swap.cookieB.sprite;
+    if (!cookieSrpiteA || !cookieSrpiteB) return;
+
     var tween = this.add.tween({
       targets: swap.cookieA.sprite,
       duration: 100,
@@ -312,7 +315,6 @@ export default class GameScene extends Phaser.Scene {
       x: cookieSrpiteB.x,
       y: cookieSrpiteB.y,
       onComplete: () => {
-        console.log("tween complete");
         this.swapSound.play();
 
         this.userInteractionEnabled = true;
@@ -328,8 +330,11 @@ export default class GameScene extends Phaser.Scene {
   }
 
   animateInvalidSwap(swap: Swap) {
-    var cookieSrpiteA: Phaser.GameObjects.Sprite = swap.cookieA.sprite,
-      cookieSrpiteB: Phaser.GameObjects.Sprite = swap.cookieB.sprite;
+    var cookieSrpiteA: Phaser.GameObjects.Sprite | undefined =
+        swap.cookieA.sprite,
+      cookieSrpiteB: Phaser.GameObjects.Sprite | undefined =
+        swap.cookieB.sprite;
+    if (!cookieSrpiteA || !cookieSrpiteB) return;
     var tween = this.add.tween({
       targets: swap.cookieA.sprite,
       duration: 100,
@@ -344,6 +349,8 @@ export default class GameScene extends Phaser.Scene {
       x: cookieSrpiteA.x,
       y: cookieSrpiteA.y,
       onComplete: () => {
+        if (!cookieSrpiteA || !cookieSrpiteB) return;
+
         var tweenBack = this.add.tween({
           targets: swap.cookieB.sprite,
           duration: 100,
@@ -359,6 +366,24 @@ export default class GameScene extends Phaser.Scene {
         this.invalidSwapSound.play();
         this.userInteractionEnabled = true;
       },
+    });
+  }
+
+  animateMatchedCookies(chains: Chain[]) {
+    chains.forEach((chain) => {
+      //  this.animateScoreForChain(chain);
+
+      chain.cookies.forEach((cookie) => {
+        // 1
+        if (cookie.sprite != undefined) {
+          // 2
+          cookie.sprite.destroy();
+          this.matchSound.play();
+
+          // 3
+          cookie.sprite = undefined;
+        }
+      });
     });
   }
 }
