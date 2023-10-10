@@ -225,14 +225,17 @@ export default class GameScene extends Phaser.Scene {
     if (toColumn < 0 || toColumn >= this.level.config.numColumns) return;
     if (toRow < 0 || toRow >= this.level.config.numRows) return;
 
-    var toCookie: Cookie = this.level.cookieAtPosition(toColumn, toRow);
+    var toCookie: Cookie | undefined = this.level.cookieAtPosition(
+      toColumn,
+      toRow
+    );
     if (!toCookie) return;
 
     var fromCookie = this.level.cookieAtPosition(
       this.swipeFromColumn!,
       this.swipeFromRow!
     );
-
+    if (!fromCookie) return;
     var swap = new Swap();
     swap.cookieA = fromCookie;
     swap.cookieB = toCookie;
@@ -278,6 +281,9 @@ export default class GameScene extends Phaser.Scene {
   handleMatches() {
     var chains = this.level.removeMatches();
     this.animateMatchedCookies(chains);
+    var columns = this.level.fillHoles();
+    console.log(columns);
+    this.animateFallingCookies(columns);
   }
 
   addTiles() {
@@ -383,6 +389,37 @@ export default class GameScene extends Phaser.Scene {
           // 3
           cookie.sprite = undefined;
         }
+      });
+    });
+  }
+
+  animateFallingCookies(columns: any[]) {
+    var longestDuration = 0;
+
+    columns.forEach((cookies: Cookie[]) => {
+      var count = 0;
+      cookies.forEach((cookie: Cookie) => {
+        count++;
+
+        var newPosition = this.pointForCookie(cookie.column, cookie.row);
+
+        var delay = 0.05 + 0.15 * count * 500;
+
+        var duration =
+          ((cookie.sprite!.y - newPosition.y) / this.tileHeight) * 100;
+
+        longestDuration = Math.max(longestDuration, duration + delay);
+        var tween = this.add.tween({
+          targets: cookie.sprite,
+          delay: delay,
+          duration: duration,
+          ease: Phaser.Math.Easing.Linear,
+          x: newPosition.x,
+          y: newPosition.y,
+          onComplete: () => {
+            this.fallingCookieSound.play();
+          },
+        });
       });
     });
   }
