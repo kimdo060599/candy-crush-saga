@@ -221,7 +221,14 @@ export default class GameScene extends Phaser.Scene {
 
     var toColumn = this.swipeFromColumn! + horzDelta;
     var toRow = this.swipeFromRow! + vertDelta;
-
+    // console.log(
+    //   "From: ",
+    //   this.swipeFromColumn,
+    //   this.swipeFromRow,
+    //   " To: ",
+    //   toColumn,
+    //   toRow
+    // );
     if (toColumn < 0 || toColumn >= this.level.config.numColumns) return;
     if (toRow < 0 || toRow >= this.level.config.numRows) return;
 
@@ -262,9 +269,8 @@ export default class GameScene extends Phaser.Scene {
       y >= 0 &&
       y < this.level.config.numRows * this.tileHeight
     ) {
-      cookiePosition.column = Phaser.Math.FloorTo(x / this.tileWidth);
-      cookiePosition.row = Phaser.Math.FloorTo(y / this.tileHeight);
-
+      cookiePosition.column = Phaser.Math.RoundTo(x / this.tileWidth);
+      cookiePosition.row = Phaser.Math.RoundTo(y / this.tileHeight);
       return true;
     } else {
       return false;
@@ -282,7 +288,6 @@ export default class GameScene extends Phaser.Scene {
     var chains = this.level.removeMatches();
     this.animateMatchedCookies(chains);
     var columns = this.level.fillHolesFromBottomToTop();
-    console.log(columns);
     this.animateFallingCookies(columns);
   }
 

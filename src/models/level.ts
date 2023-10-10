@@ -53,8 +53,6 @@ export class Level {
       this.detectPossibleSwaps();
     } while (this.possibleSwaps.length == 0);
 
-    console.log("possibleSwaps", this.possibleSwaps);
-
     return set;
   }
 
@@ -441,6 +439,7 @@ export class Level {
     }
     return set;
   }
+
   private removeCookies(chains: Chain[]) {
     chains.forEach((chain) => {
       chain.cookies.forEach((cookie) => {
