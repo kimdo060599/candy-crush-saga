@@ -108,7 +108,7 @@ export class Level {
     return horizontalChains.concat(verticalChains);
   }
 
-  fillHoles(): any[] {
+  fillHolesFromTopToBottom(): any[] {
     var columns = [];
 
     // 1
@@ -122,6 +122,46 @@ export class Level {
         ) {
           // 3
           for (var lookup = row + 1; lookup < this.config.numRows; lookup++) {
+            var cookie = this.cookies[column][lookup];
+            if (cookie != undefined) {
+              // 4
+              this.cookies[column][lookup] = undefined;
+              this.cookies[column][row] = cookie;
+              cookie.row = row;
+
+              // 5
+              if (array == undefined) {
+                array = [];
+                columns.push(array);
+              }
+              array.push(cookie);
+
+              // 6
+              break;
+            }
+          }
+        }
+      }
+    }
+    this.detectPossibleSwaps();
+
+    return columns;
+  }
+
+  fillHolesFromBottomToTop(): any[] {
+    var columns = [];
+
+    // 1
+    for (var column = 0; column < this.config.numColumns; column++) {
+      var array: Cookie[] | undefined;
+      for (var row = this.config.numRows - 1; row >= 0; row--) {
+        // 2
+        if (
+          this.tiles[column][row] != undefined &&
+          this.cookies[column][row] == undefined
+        ) {
+          // 3
+          for (var lookup = row - 1; lookup >= 0; lookup--) {
             var cookie = this.cookies[column][lookup];
             if (cookie != undefined) {
               // 4

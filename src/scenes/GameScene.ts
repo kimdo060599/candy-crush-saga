@@ -281,7 +281,7 @@ export default class GameScene extends Phaser.Scene {
   handleMatches() {
     var chains = this.level.removeMatches();
     this.animateMatchedCookies(chains);
-    var columns = this.level.fillHoles();
+    var columns = this.level.fillHolesFromBottomToTop();
     console.log(columns);
     this.animateFallingCookies(columns);
   }
