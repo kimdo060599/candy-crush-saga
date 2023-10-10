@@ -186,6 +186,47 @@ export class Level {
     return columns;
   }
 
+  topUpCookies(): Cookie[][] {
+    var columns = [];
+
+    var cookieType = 0;
+
+    for (var column = 0; column < this.config.numColumns; column++) {
+      var array: Cookie[] | undefined;
+
+      // 1
+      for (
+        var row = this.config.numRows - 1;
+        row >= 0 && this.cookies[column][row] == undefined;
+        row--
+      ) {
+        // 2
+        if (this.tiles[column][row] != undefined) {
+          // 3
+          var newCookieType: CookieType;
+          do {
+            newCookieType = GameHelpers.getRandomNumber(6);
+          } while (newCookieType == cookieType);
+          cookieType = newCookieType;
+
+          // 4
+          var cookie = this.createCookieAtColumn(column, row, newCookieType);
+
+          // 5
+          if (array == undefined) {
+            array = [];
+            columns.push(array);
+          }
+          array.push(cookie);
+        }
+      }
+    }
+
+    this.detectPossibleSwaps();
+
+    return columns;
+  }
+
   private createTilesArray() {
     this.tiles = new Array(this.config.numColumns - 1);
     for (var i = 0; i < this.config.numColumns; i++) {
