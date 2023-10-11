@@ -61,7 +61,6 @@ export default class GameScene extends Phaser.Scene {
     this.config = new Config(9, 9, 6);
     // this.level = new Level(this.config);
     this.editorCreate();
-
     // this.initScore();
     this.createScoreText();
     this.createLevelText(this.levelNumber + 1);
@@ -70,6 +69,10 @@ export default class GameScene extends Phaser.Scene {
     });
     this.initLevel("Level_" + this.levelNumber);
     this.beginGame();
+  }
+
+  update(time: number, delta: number): void {
+    this.handleInteractive();
   }
 
   //   private initScore() {
@@ -293,6 +296,14 @@ export default class GameScene extends Phaser.Scene {
     });
   }
 
+  handleInteractive() {
+    this.cookieLayer.getChildren().forEach((child) => {
+      this.userInteractionEnabled
+        ? child.setInteractive()
+        : child.disableInteractive();
+    });
+  }
+
   addTiles() {
     this.tilesLayer = this.add.group();
     this.tilesLayer.setDepth(1);
@@ -375,9 +386,11 @@ export default class GameScene extends Phaser.Scene {
           duration: 100,
           x: cookieSrpiteB.x,
           y: cookieSrpiteB.y,
+          onComplete: () => {
+            this.userInteractionEnabled = true;
+          },
         });
         this.invalidSwapSound.play();
-        this.userInteractionEnabled = true;
       },
     });
   }
