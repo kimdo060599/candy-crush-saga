@@ -101,9 +101,15 @@ export class Level {
     this.removeCookies(horizontalChains);
     this.removeCookies(verticalChains);
 
-    // this.calculateScores(horizontalChains);
-    // this.calculateScores(verticalChains);
+    this.calculateScores(horizontalChains);
+    this.calculateScores(verticalChains);
     return horizontalChains.concat(verticalChains);
+  }
+
+  calculateScores(chains: Chain[]) {
+    chains.forEach((chain) => {
+      chain.score = 60 * (chain.cookies.length - 2);
+    });
   }
 
   fillHolesFromTopToBottom(): any[] {

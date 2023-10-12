@@ -111,6 +111,10 @@ export default class GameScene extends Phaser.Scene {
     this.scoreText.setShadow(-1, 1, "rgba(0,0,0,0.5)", 0);
   }
 
+  private updateScoreText() {
+    this.scoreText.text = "" + this.score;
+  }
+
   private createLevelText(levelNumber: number) {
     var levelLabel = this.add.text(550, 20, "Level:", {
       // font: "Quicksand",
@@ -307,12 +311,21 @@ export default class GameScene extends Phaser.Scene {
       return;
     }
     this.animateMatchedCookies(chains);
+    this.updateScore(chains);
     var columns = this.level.fillHolesFromTopToBottom();
     this.animateFallingCookies(columns);
     var newColumns = this.level.topUpCookies();
     this.animateNewCookies(newColumns, () => {
       this.handleMatches();
     });
+  }
+
+  private updateScore(chains: Chain[]) {
+    chains.forEach((chain) => {
+      this.score += chain.score;
+    });
+
+    this.updateScoreText();
   }
 
   private beginNextTurn() {
@@ -505,6 +518,7 @@ export default class GameScene extends Phaser.Scene {
           ease: Phaser.Math.Easing.Linear,
           x: newPoint.x,
           y: newPoint.y,
+          delay: delay,
           alpha: 1,
         });
       });
