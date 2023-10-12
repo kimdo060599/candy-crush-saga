@@ -195,13 +195,12 @@ export class Level {
       var array: Cookie[] | undefined;
 
       // 1
-      for (
-        var row = this.config.numRows - 1;
-        row >= 0 && this.cookies[column][row] == undefined;
-        row--
-      ) {
+      for (var row = 0; row < this.config.numRows; row++) {
         // 2
-        if (this.tiles[column][row] != undefined) {
+        if (
+          this.tiles[column][row] != undefined &&
+          this.cookies[column][row] == undefined
+        ) {
           // 3
           var newCookieType: CookieType;
           do {
@@ -223,7 +222,7 @@ export class Level {
     }
 
     this.detectPossibleSwaps();
-
+    // debugger;
     return columns;
   }
 

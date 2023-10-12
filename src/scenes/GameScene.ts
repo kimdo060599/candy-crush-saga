@@ -67,6 +67,9 @@ export default class GameScene extends Phaser.Scene {
     this.input.on("pointermove", (pointer: Phaser.Input.Pointer) => {
       this.touchesMoved(pointer, pointer.x, pointer.y);
     });
+    this.input.on("pointerup", () => {
+      this.touchesEnd();
+    });
     this.initLevel("Level_" + this.levelNumber);
     this.beginGame();
   }
@@ -84,8 +87,12 @@ export default class GameScene extends Phaser.Scene {
   //        this.score =  0;
   //     }
   //  }
-
   beginGame() {
+    this.userInteractionEnabled = true;
+    this.shuffle();
+  }
+
+  shuffle() {
     var cookies: Cookie[] = this.level.suffle();
     this.addSpritesForCookies(cookies);
   }
@@ -148,9 +155,13 @@ export default class GameScene extends Phaser.Scene {
       createdCookie.on("pointerdown", () => {
         this.touchesBegan(createdCookie, point);
       });
-      createdCookie.on("pointerup", () => {
-        this.touchesEnd();
-      });
+
+      createdCookie.on(
+        Phaser.Input.Events.GAMEOBJECT_POINTER_UP,
+        (pointer: Phaser.Input.Pointer) => {
+          // this.touchesEnd();
+        }
+      );
       cookie.sprite = createdCookie;
     });
   }
@@ -281,12 +292,20 @@ export default class GameScene extends Phaser.Scene {
   touchesEnd() {
     this.swipeFromColumn = this.swipeFromRow = undefined;
     if (this.isPossibleSwap) {
+      this.userInteractionEnabled = false;
       this.handleMatches();
     }
+    // debugger;
+    // this.userInteractionEnabled = true;
   }
 
   handleMatches() {
     var chains = this.level.removeMatches();
+
+    if (chains.length == 0) {
+      this.beginNextTurn();
+      return;
+    }
     this.animateMatchedCookies(chains);
     var columns = this.level.fillHolesFromTopToBottom();
     this.animateFallingCookies(columns);
@@ -294,6 +313,10 @@ export default class GameScene extends Phaser.Scene {
     this.animateNewCookies(newColumns, () => {
       this.handleMatches();
     });
+  }
+
+  private beginNextTurn() {
+    this.userInteractionEnabled = true;
   }
 
   handleInteractive() {
@@ -340,8 +363,6 @@ export default class GameScene extends Phaser.Scene {
       y: cookieSrpiteB.y,
       onComplete: () => {
         this.swapSound.play();
-
-        this.userInteractionEnabled = true;
       },
     });
     var tween2 = this.add.tween({
@@ -415,7 +436,6 @@ export default class GameScene extends Phaser.Scene {
 
   animateFallingCookies(columns: any[]) {
     var longestDuration = 0;
-
     columns.forEach((cookies: Cookie[]) => {
       var count = 0;
       cookies.forEach((cookie: Cookie) => {
@@ -447,15 +467,13 @@ export default class GameScene extends Phaser.Scene {
   animateNewCookies(columns: any[], onComplete: Function) {
     var longestDuration = 0;
     var tweens: Phaser.Tweens.Tween[] = [];
-
     columns.forEach((cookies: Cookie[]) => {
       var idx = 0;
-
-      var startRow = cookies[0].row + 1;
       var cookiesCount = cookies.length;
 
       cookies.forEach((cookie: Cookie) => {
         idx++;
+        var startRow = cookie.row + 1;
 
         var point = this.pointForCookie(cookie.column, startRow);
         var createdCookie: Phaser.GameObjects.Sprite = this.cookieLayer.create(
@@ -473,10 +491,13 @@ export default class GameScene extends Phaser.Scene {
         cookie.sprite = createdCookie;
         var delay = 0.1 + 0.2 * (cookiesCount - idx - 1) * 150;
 
-        var duration = (startRow - cookie.row) * 100;
-        longestDuration = Math.max(longestDuration, duration + delay);
-
         var newPoint = this.pointForCookie(cookie.column, cookie.row);
+        var duration =
+          ((cookie.sprite!.y - newPoint.y) / this.tileHeight) *
+          cookie.row *
+          100;
+
+        longestDuration = Math.max(longestDuration, duration + delay);
         createdCookie.alpha = 0;
         var tween = this.add.tween({
           targets: createdCookie,
