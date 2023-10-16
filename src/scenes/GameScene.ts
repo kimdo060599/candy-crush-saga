@@ -6,11 +6,12 @@ import { Tile } from "../models/tile";
 import { Level } from "../models/level";
 import { Swap } from "../models/swap";
 import { Chain } from "../models/chain";
+import appConstants from "../commons/constants";
 export default class GameScene extends Phaser.Scene {
-  tileWidth: number = 64.0;
-  tileHeight: number = 72.0;
-  marginYDelta: number = 200;
-  marginXDelta: number = 32;
+  tileWidth: number = appConstants.cookieConstants.tileWidth;
+  tileHeight: number = appConstants.cookieConstants.tileHeight;
+  marginYDelta: number = appConstants.cookieConstants.marginYDelta;
+  marginXDelta: number = appConstants.cookieConstants.marginXDelta;
 
   level!: Level;
   cookieLayer!: Phaser.GameObjects.Group;
@@ -98,17 +99,29 @@ export default class GameScene extends Phaser.Scene {
   }
 
   private createScoreText() {
-    this.scoreLabel = this.add.text(this.screenCenterX, 20, "Score:", {
-      // font: "Gill Sans Bold",
-      fontSize: 20,
-    });
-    this.scoreLabel.setShadow(-1, 1, "rgba(0,0,0,0.5)", 0);
+    this.scoreLabel = this.add.text(
+      this.screenCenterX,
+      appConstants.fontSize.labelFontSize,
+      appConstants.textKey.score,
+      {
+        // font: "Gill Sans Bold",
+        fontSize: appConstants.fontSize.labelFontSize,
+        color: appConstants.listColor.kWhiteColor,
+      }
+    );
+    this.scoreLabel.setShadow(
+      -1,
+      1,
+      appConstants.listColor.transparentWhite,
+      0
+    );
 
     this.scoreText = this.add.text(this.screenCenterX, 40, "" + this.score, {
       // font: "Gill Sans Bold",
-      fontSize: 30,
+      fontSize: appConstants.fontSize.textFontSize,
+      color: appConstants.listColor.kWhiteColor,
     });
-    this.scoreText.setShadow(-1, 1, "rgba(0,0,0,0.5)", 0);
+    this.scoreText.setShadow(-1, 1, appConstants.listColor.transparentWhite, 0);
   }
 
   private updateScoreText() {
@@ -116,26 +129,28 @@ export default class GameScene extends Phaser.Scene {
   }
 
   private createLevelText(levelNumber: number) {
-    var levelLabel = this.add.text(550, 20, "Level:", {
+    var levelLabel = this.add.text(550, 20, appConstants.textKey.level, {
       // font: "Quicksand",
       align: "center",
-      fontSize: 20,
+      fontSize: appConstants.fontSize.labelFontSize,
+      color: appConstants.listColor.kWhiteColor,
     });
-    levelLabel.setShadow(-1, 1, "rgba(0,0,0,0.5)", 0);
+    levelLabel.setShadow(-1, 1, appConstants.listColor.transparentWhite, 0);
 
     var levelText = this.add.text(550, 40, "" + levelNumber, {
       // font: "Gill Sans Bold",
       align: "center",
-      fontSize: 30,
+      fontSize: appConstants.fontSize.textFontSize,
+      color: appConstants.listColor.kWhiteColor,
     });
-    levelText.setShadow(-1, 1, "rgba(0,0,0,0.5)", 0);
+    levelText.setShadow(-1, 1, appConstants.listColor.transparentWhite, 0);
   }
 
   private initLevel(levelName: string) {
     var levelData = this.cache.json.get(levelName);
 
     if (levelData == null) {
-      throw "Cannot load level data";
+      throw appConstants.textKey.canNotLoadData;
     }
 
     // var gameConfig = new Config(9, 9, 6);
@@ -370,7 +385,7 @@ export default class GameScene extends Phaser.Scene {
 
     var tween = this.add.tween({
       targets: swap.cookieA.sprite,
-      duration: 100,
+      duration: appConstants.animationConstants.cookieDuration,
       ease: Phaser.Math.Easing.Linear,
       x: cookieSrpiteB.x,
       y: cookieSrpiteB.y,
@@ -380,7 +395,7 @@ export default class GameScene extends Phaser.Scene {
     });
     var tween2 = this.add.tween({
       targets: swap.cookieB.sprite,
-      duration: 100,
+      duration: appConstants.animationConstants.cookieDuration,
       ease: Phaser.Math.Easing.Linear,
       x: cookieSrpiteA.x,
       y: cookieSrpiteA.y,
@@ -395,14 +410,14 @@ export default class GameScene extends Phaser.Scene {
     if (!cookieSrpiteA || !cookieSrpiteB) return;
     var tween = this.add.tween({
       targets: swap.cookieA.sprite,
-      duration: 100,
+      duration: appConstants.animationConstants.cookieDuration,
       ease: Phaser.Math.Easing.Linear,
       x: cookieSrpiteB.x,
       y: cookieSrpiteB.y,
     });
     var tween2 = this.add.tween({
       targets: swap.cookieB.sprite,
-      duration: 100,
+      duration: appConstants.animationConstants.cookieDuration,
       ease: Phaser.Math.Easing.Linear,
       x: cookieSrpiteA.x,
       y: cookieSrpiteA.y,
@@ -411,13 +426,13 @@ export default class GameScene extends Phaser.Scene {
 
         var tweenBack = this.add.tween({
           targets: swap.cookieB.sprite,
-          duration: 100,
+          duration: appConstants.animationConstants.cookieDuration,
           x: cookieSrpiteA.x,
           y: cookieSrpiteA.y,
         });
         var tweenBack2 = this.add.tween({
           targets: swap.cookieA.sprite,
-          duration: 100,
+          duration: appConstants.animationConstants.cookieDuration,
           x: cookieSrpiteB.x,
           y: cookieSrpiteB.y,
           onComplete: () => {
@@ -459,7 +474,8 @@ export default class GameScene extends Phaser.Scene {
         var delay = 0.05 + 0.15 * count * 500;
 
         var duration =
-          ((cookie.sprite!.y - newPosition.y) / this.tileHeight) * 100;
+          ((cookie.sprite!.y - newPosition.y) / this.tileHeight) *
+          appConstants.animationConstants.cookieDuration;
 
         longestDuration = Math.max(longestDuration, duration + delay);
         var tween = this.add.tween({
@@ -508,7 +524,7 @@ export default class GameScene extends Phaser.Scene {
         var duration =
           ((cookie.sprite!.y - newPoint.y) / this.tileHeight) *
           cookie.row *
-          100;
+          appConstants.animationConstants.cookieDuration;
 
         longestDuration = Math.max(longestDuration, duration + delay);
         createdCookie.alpha = 0;
@@ -524,7 +540,7 @@ export default class GameScene extends Phaser.Scene {
       });
     });
     this.time.addEvent({
-      delay: longestDuration + 100,
+      delay: longestDuration + appConstants.animationConstants.cookieDuration,
       callback: onComplete,
     });
   }
