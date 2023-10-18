@@ -117,7 +117,7 @@ export class Level {
 
     // 1
     for (var column = 0; column < this.config.numColumns; column++) {
-      var array: Cookie[] | undefined;
+      var array: Cookie[] = [];
       for (var row = 0; row < this.config.numRows; row++) {
         // 2
         if (
@@ -133,11 +133,6 @@ export class Level {
               this.cookies[column][row] = cookie;
               cookie.row = row;
 
-              // 5
-              if (array == undefined) {
-                array = [];
-                columns.push(array);
-              }
               array.push(cookie);
 
               // 6
@@ -146,6 +141,7 @@ export class Level {
           }
         }
       }
+      if (array.length != 0) columns.push(array);
     }
     this.detectPossibleSwaps();
 
@@ -157,7 +153,7 @@ export class Level {
 
     // 1
     for (var column = 0; column < this.config.numColumns; column++) {
-      var array: Cookie[] | undefined;
+      var array: Cookie[] = [];
       for (var row = this.config.numRows - 1; row >= 0; row--) {
         // 2
         if (
@@ -173,11 +169,6 @@ export class Level {
               this.cookies[column][row] = cookie;
               cookie.row = row;
 
-              // 5
-              if (array == undefined) {
-                array = [];
-                columns.push(array);
-              }
               array.push(cookie);
 
               // 6
@@ -186,6 +177,7 @@ export class Level {
           }
         }
       }
+      if (array.length != 0) columns.push(array);
     }
     this.detectPossibleSwaps();
 
@@ -198,7 +190,7 @@ export class Level {
     var cookieType = 0;
 
     for (var column = 0; column < this.config.numColumns; column++) {
-      var array: Cookie[] | undefined;
+      var array: Cookie[] = [];
 
       // 1
       for (var row = 0; row < this.config.numRows; row++) {
@@ -218,13 +210,14 @@ export class Level {
           var cookie = this.createCookieAtColumn(column, row, newCookieType);
 
           // 5
-          if (array == undefined) {
-            array = [];
-            columns.push(array);
-          }
+          // if (array == undefined) {
+          //   array = [];
+          //   columns.push(array);
+          // }
           array.push(cookie);
         }
       }
+      if (array.length != 0) columns.push(array);
     }
 
     this.detectPossibleSwaps();

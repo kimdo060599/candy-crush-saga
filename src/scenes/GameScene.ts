@@ -330,6 +330,7 @@ export default class GameScene extends Phaser.Scene {
     var columns = this.level.fillHolesFromTopToBottom();
     this.animateFallingCookies(columns);
     var newColumns = this.level.topUpCookies();
+    console.log(newColumns);
     this.animateNewCookies(newColumns, () => {
       this.handleMatches();
     });
@@ -468,7 +469,6 @@ export default class GameScene extends Phaser.Scene {
       var count = 0;
       cookies.forEach((cookie: Cookie) => {
         count++;
-
         var newPosition = this.pointForCookie(cookie.column, cookie.row);
 
         var delay = 0.05 + 0.15 * count * 500;
@@ -495,13 +495,16 @@ export default class GameScene extends Phaser.Scene {
 
   animateNewCookies(columns: any[], onComplete: Function) {
     var longestDuration = 0;
+
     var tweens: Phaser.Tweens.Tween[] = [];
     columns.forEach((cookies: Cookie[]) => {
-      var idx = 0;
+      var count = 0;
+
       var cookiesCount = cookies.length;
 
       cookies.forEach((cookie: Cookie) => {
-        idx++;
+        count++;
+
         var startRow = cookie.row + 1;
 
         var point = this.pointForCookie(cookie.column, startRow);
@@ -518,7 +521,7 @@ export default class GameScene extends Phaser.Scene {
           this.touchesEnd();
         });
         cookie.sprite = createdCookie;
-        var delay = 0.1 + 0.2 * (cookiesCount - idx - 1) * 150;
+        var delay = 0.05 + 0.15 * count * 500;
 
         var newPoint = this.pointForCookie(cookie.column, cookie.row);
         var duration =
